@@ -1,10 +1,6 @@
 package com.praticando.cadastro_usuario.infractructure.dto;
 
 import com.praticando.cadastro_usuario.infractructure.entity.Usuario;
-import lombok.Builder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 
 public record UsuarioDTO(String nome, String email) {
 

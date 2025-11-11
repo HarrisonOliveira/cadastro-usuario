@@ -1,4 +1,4 @@
-package com.praticando.cadastro_usuario.bisness;
+package com.praticando.cadastro_usuario.bisness.service;
 
 import com.praticando.cadastro_usuario.bisness.exceptions.EmailNaoEncontradoException;
 import com.praticando.cadastro_usuario.bisness.exceptions.IdUsuarioNaoEncontradoException;

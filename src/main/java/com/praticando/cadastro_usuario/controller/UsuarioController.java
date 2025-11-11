@@ -1,16 +1,13 @@
 package com.praticando.cadastro_usuario.controller;
 
-import com.praticando.cadastro_usuario.bisness.UsuarioService;
+import com.praticando.cadastro_usuario.bisness.service.UsuarioService;
 import com.praticando.cadastro_usuario.infractructure.dto.UsuarioDTO;
-import com.praticando.cadastro_usuario.infractructure.entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
