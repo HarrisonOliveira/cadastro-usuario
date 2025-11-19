@@ -5,6 +5,7 @@ import com.praticando.cadastro_usuario.infractructure.dto.UsuarioDTO;
 import com.praticando.cadastro_usuario.infractructure.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,7 +24,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody UsuarioDTO usuario){
+    public ResponseEntity<UsuarioDTO> salvarUsuario(@Validated @RequestBody UsuarioDTO usuario){
         Usuario usuarioSalva =  service.criaUsuario(usuario);
         UsuarioDTO usuarioDTO = UsuarioDTO.paraDTO(usuarioSalva);
 
@@ -58,8 +59,8 @@ public class UsuarioController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable("id") String id, @RequestBody UsuarioDTO usuario){
-        service.atualizarUsuario(id, usuario);
-        return ResponseEntity.ok(usuario);
+        UsuarioDTO usuarioAtualizado = service.atualizarUsuario(id, usuario);
+        return ResponseEntity.ok(usuarioAtualizado);
     }
 
 }

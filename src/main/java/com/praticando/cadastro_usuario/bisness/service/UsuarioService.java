@@ -50,17 +50,20 @@ public class UsuarioService {
         return UsuarioDTO.paraDTO(usuario);
     }
 
-    public void atualizarUsuario(String id, UsuarioDTO usuario) {
+    public UsuarioDTO atualizarUsuario(String id, UsuarioDTO usuario) {
         Usuario usuarioExistente = repository.findById(id).orElseThrow(
                 () -> new IdUsuarioNaoEncontradoException(id));
 
         Usuario usuarioAtualizado = Usuario.builder()
-                .email(usuario.email() != null ? usuario.email() : usuarioExistente.getEmail())
-                .nome(usuario.nome() != null ? usuario.nome() : usuarioExistente.getNome())
                 .id(usuarioExistente.getId())
+                .nome(usuario.nome() != null ? usuario.nome() : usuarioExistente.getNome())
+                .email(usuario.email() != null ? usuario.email() : usuarioExistente.getEmail())
                 .build();
+
         repository.save(usuarioAtualizado);
-        log.info("Informações do usuário {} foram atualizadas atualizado com sucesso", usuarioAtualizado.getNome());
+        log.info("Informações do usuário {} foram atualizadas com sucesso", usuarioAtualizado.getNome());
+
+        return UsuarioDTO.paraDTO(usuarioAtualizado);
     }
 
     public void deletarUsuario(String id) {
