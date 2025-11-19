@@ -2,54 +2,64 @@ package com.praticando.cadastro_usuario.controller;
 
 import com.praticando.cadastro_usuario.bisness.service.UsuarioService;
 import com.praticando.cadastro_usuario.infractructure.dto.UsuarioDTO;
-import lombok.RequiredArgsConstructor;
+import com.praticando.cadastro_usuario.infractructure.entity.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/usuario")
+@RequestMapping(value ="/usuarios")
 public class UsuarioController {
 
+    private final UsuarioService service;
+
     @Autowired
-    private UsuarioService service;
-
-
-    @PostMapping(value = "/cadastrarUsuario")
-    public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody UsuarioDTO usuario){
-        service.salvarUsuario(usuario);
-        return ResponseEntity.ok().build();
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
     }
 
-    @GetMapping(value = "/getAll")
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> salvarUsuario(@RequestBody UsuarioDTO usuario){
+        Usuario usuarioSalva =  service.criaUsuario(usuario);
+        UsuarioDTO usuarioDTO = UsuarioDTO.paraDTO(usuarioSalva);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("{id}")
+                .buildAndExpand(usuarioSalva.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(usuarioDTO);
+    }
+
+    @GetMapping
     public ResponseEntity<List<UsuarioDTO>> buscarTodosUsuarios(){
         return ResponseEntity.ok(service.buscarTodosUsuarios());
     }
 
-    @GetMapping(value = "/getById/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable("id") String id){
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @GetMapping(value = "/getByEmail/{email}")
+    @GetMapping(value = "/email/{email}")
     public ResponseEntity<UsuarioDTO> buscarPorEmail(@PathVariable("email") String email){
         return ResponseEntity.ok(service.buscarPorEmail(email));
     }
 
-    @DeleteMapping(value = "/deleteById/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable("id") String id){
         service.deletarUsuario(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/update/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable("id") String id, @RequestBody UsuarioDTO usuario){
         service.atualizarUsuario(id, usuario);
         return ResponseEntity.ok(usuario);
     }
-
 
 }

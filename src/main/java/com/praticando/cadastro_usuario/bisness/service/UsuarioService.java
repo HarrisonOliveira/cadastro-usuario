@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 public class UsuarioService {
 
-    @Autowired
     UsuarioRepository repository;
 
     @Autowired
@@ -24,13 +24,14 @@ public class UsuarioService {
 
     }
 
-    public void salvarUsuario(UsuarioDTO usuario) {
+    public Usuario criaUsuario(UsuarioDTO usuario) {
         Usuario user = UsuarioDTO.paraEntidade(usuario);
         repository.save(user);
-        log.info("Usuario {} salvo com sucesso", usuario.nome());
+        log.info("Usuario {} criado com sucesso", usuario.nome());
+        return user;
     }
 
-    public List<UsuarioDTO> buscarTodosUsuarios(){
+    public List<UsuarioDTO> buscarTodosUsuarios() {
         return repository.findAll()
                 .stream()
                 .map(UsuarioDTO::paraDTO)
@@ -59,14 +60,16 @@ public class UsuarioService {
                 .id(usuarioExistente.getId())
                 .build();
         repository.save(usuarioAtualizado);
+        log.info("Informações do usuário {} foram atualizadas atualizado com sucesso", usuarioAtualizado.getNome());
     }
 
     public void deletarUsuario(String id) {
-        UsuarioDTO usuario = buscarPorId(id);
-        if (usuario != null) {
+        Optional<Usuario> usuario = repository.findById(id);
+
+        if (usuario.isPresent()) {
             repository.deleteById(id);
-            log.info("Usuario {} removido com sucesso", usuario.nome());
-        }
+            log.info("Usuario {} removido com sucesso", usuario.get().getNome());
+        } else throw new IdUsuarioNaoEncontradoException("Não foi possível encontrar o usuario com o {} informado");
 
     }
 
